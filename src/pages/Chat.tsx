@@ -220,23 +220,23 @@ const Chat = () => {
   return (
     <div className="h-screen flex flex-col bg-gradient-hero">
       {/* Header */}
-      <div className="border-b bg-card shadow-sm">
-        <div className="container mx-auto px-4 py-4">
+      <div className="border-b bg-card/80 backdrop-blur-md shadow-lg sticky top-0 z-10">
+        <div className="container mx-auto px-4 py-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Button variant="ghost" size="icon" onClick={() => navigate("/dashboard")}>
+              <Button variant="ghost" size="icon" onClick={() => navigate("/dashboard")} className="hover:bg-accent">
                 <ArrowLeft className="w-5 h-5" />
               </Button>
-              <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${mentor.color} flex items-center justify-center`}>
-                <Icon className="w-5 h-5 text-white" />
+              <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${mentor.color} flex items-center justify-center shadow-lg`}>
+                <Icon className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="font-semibold text-lg">{mentor.name}</h1>
-                <p className="text-sm text-muted-foreground">AI Mentor</p>
+                <h1 className="font-bold text-xl">{mentor.name}</h1>
+                <p className="text-sm text-muted-foreground">Your expert AI mentor</p>
               </div>
             </div>
-            <Badge variant="secondary">
-              {messages.length} messages
+            <Badge variant="secondary" className="px-4 py-2 text-sm font-medium">
+              {messages.length} {messages.length === 1 ? 'message' : 'messages'}
             </Badge>
           </div>
         </div>
@@ -246,13 +246,13 @@ const Chat = () => {
       <ScrollArea className="flex-1" ref={scrollRef}>
         <div className="container mx-auto px-4 py-6 space-y-4">
           {messages.length === 0 && !loading && (
-            <Card className="p-8 text-center">
-              <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${mentor.color} flex items-center justify-center mx-auto mb-4`}>
-                <Icon className="w-8 h-8 text-white" />
+            <Card className="p-12 text-center bg-gradient-to-br from-card to-card/50 border-2 shadow-xl">
+              <div className={`w-24 h-24 rounded-2xl bg-gradient-to-br ${mentor.color} flex items-center justify-center mx-auto mb-6 shadow-2xl`}>
+                <Icon className="w-12 h-12 text-white" />
               </div>
-              <h3 className="font-semibold text-lg mb-2">Start a conversation</h3>
-              <p className="text-muted-foreground">
-                Ask me anything about {mentor.name.toLowerCase()} for your startup!
+              <h3 className="font-bold text-2xl mb-3">Welcome to {mentor.name}!</h3>
+              <p className="text-muted-foreground text-lg max-w-md mx-auto">
+                I'm here to guide you with expert advice. Ask me anything about {mentor.name.toLowerCase()} for your startup journey!
               </p>
             </Card>
           )}
@@ -266,26 +266,31 @@ const Chat = () => {
               )}
             >
               {message.role === "assistant" && (
-                <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${mentor.color} flex items-center justify-center flex-shrink-0`}>
-                  <Icon className="w-4 h-4 text-white" />
+                <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${mentor.color} flex items-center justify-center flex-shrink-0 shadow-lg`}>
+                  <Icon className="w-5 h-5 text-white" />
                 </div>
               )}
               <Card className={cn(
-                "p-4 max-w-[80%]",
-                message.role === "user" ? "bg-primary text-primary-foreground" : "bg-card"
+                "p-5 max-w-[80%] shadow-md",
+                message.role === "user" 
+                  ? "bg-primary text-primary-foreground shadow-primary/30" 
+                  : "bg-card border-2"
               )}>
-                <p className="whitespace-pre-wrap">{message.content}</p>
+                <p className="whitespace-pre-wrap leading-relaxed text-base">{message.content}</p>
               </Card>
             </div>
           ))}
 
           {loading && (
             <div className="flex gap-3">
-              <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${mentor.color} flex items-center justify-center`}>
-                <Icon className="w-4 h-4 text-white" />
+              <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${mentor.color} flex items-center justify-center shadow-lg`}>
+                <Icon className="w-5 h-5 text-white" />
               </div>
-              <Card className="p-4">
-                <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
+              <Card className="p-5 border-2 shadow-md">
+                <div className="flex items-center gap-3">
+                  <Loader2 className="w-5 h-5 animate-spin text-primary" />
+                  <span className="text-muted-foreground">Thinking...</span>
+                </div>
               </Card>
             </div>
           )}
@@ -293,23 +298,28 @@ const Chat = () => {
       </ScrollArea>
 
       {/* Input */}
-      <div className="border-t bg-card shadow-lg">
-        <div className="container mx-auto px-4 py-4">
+      <div className="border-t bg-card/80 backdrop-blur-md shadow-2xl">
+        <div className="container mx-auto px-4 py-5">
           <form
             onSubmit={(e) => {
               e.preventDefault();
               handleSend();
             }}
-            className="flex gap-2"
+            className="flex gap-3"
           >
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder={`Ask ${mentor.name}...`}
+              placeholder={`Ask ${mentor.name} anything...`}
               disabled={loading}
-              className="flex-1"
+              className="flex-1 h-12 text-base border-2 focus:border-primary"
             />
-            <Button type="submit" disabled={loading || !input.trim()}>
+            <Button 
+              type="submit" 
+              disabled={loading || !input.trim()}
+              className="h-12 px-6 shadow-lg"
+              size="lg"
+            >
               {loading ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
               ) : (

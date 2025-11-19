@@ -1,1 +1,4 @@
 project_id = "iqgbxgllltezsntzzonp"
+
+[functions.mentor-chat]
+verify_jwt = false
