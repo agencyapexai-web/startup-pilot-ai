@@ -20,57 +20,50 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
-const mentors = [
-  {
-    id: "strategist",
-    icon: Lightbulb,
-    name: "Startup Strategist",
+const mentorConfig = {
+  strategist: { 
+    icon: Lightbulb, 
+    name: "Startup Strategist", 
     description: "Business model & strategy",
-    color: "from-blue-500 to-cyan-500"
+    color: "from-blue-500 to-cyan-500" 
   },
-  {
-    id: "tech",
-    icon: Code,
-    name: "MVP Tech Mentor",
+  tech: { 
+    icon: Code, 
+    name: "MVP Tech Mentor", 
     description: "Technical architecture",
-    color: "from-purple-500 to-pink-500"
+    color: "from-purple-500 to-pink-500" 
   },
-  {
-    id: "validation",
-    icon: Target,
-    name: "Market Validation",
+  validation: { 
+    icon: Target, 
+    name: "Market Validation", 
     description: "Customer research",
-    color: "from-green-500 to-emerald-500"
+    color: "from-green-500 to-emerald-500" 
   },
-  {
-    id: "growth",
-    icon: TrendingUp,
-    name: "Growth Mentor",
+  growth: { 
+    icon: TrendingUp, 
+    name: "Growth Mentor", 
     description: "Acquisition & scaling",
-    color: "from-orange-500 to-red-500"
+    color: "from-orange-500 to-red-500" 
   },
-  {
-    id: "branding",
-    icon: Palette,
-    name: "Branding Expert",
+  branding: { 
+    icon: Palette, 
+    name: "Branding Expert", 
     description: "Positioning & messaging",
-    color: "from-pink-500 to-rose-500"
+    color: "from-pink-500 to-rose-500" 
   },
-  {
-    id: "fundraising",
-    icon: DollarSign,
-    name: "Fundraising Mentor",
+  fundraising: { 
+    icon: DollarSign, 
+    name: "Fundraising Mentor", 
     description: "Investment & capital",
-    color: "from-yellow-500 to-orange-500"
+    color: "from-yellow-500 to-orange-500" 
   },
-  {
-    id: "operations",
-    icon: Settings,
-    name: "Operations Mentor",
+  operations: { 
+    icon: Settings, 
+    name: "Operations Mentor", 
     description: "Systems & processes",
-    color: "from-indigo-500 to-blue-500"
+    color: "from-indigo-500 to-blue-500" 
   }
-];
+};
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -118,6 +111,11 @@ const Dashboard = () => {
     navigate(`/chat?mentor=${mentorId}`);
   };
 
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate("/auth");
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-hero flex items-center justify-center">
@@ -143,81 +141,106 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-hero">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-2">
-            <h1 className="text-3xl font-bold">{project.idea || "Your Startup"}</h1>
-            <Badge variant="secondary" className="capitalize">{project.stage}</Badge>
+      {/* Header */}
+      <div className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-10 shadow-lg mb-8">
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h1 className="text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+                AI Startup Builder
+              </h1>
+              <p className="text-muted-foreground mt-2 text-lg">Your personal startup incubator with 7 expert AI mentors</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <Button variant="ghost" onClick={handleLogout} className="hover:bg-accent">
+                Logout
+              </Button>
+            </div>
           </div>
-          <p className="text-muted-foreground">{project.industry}</p>
+
+          {/* Project Info */}
+          <div className="flex items-center gap-3">
+            <h2 className="text-2xl font-bold">{project.idea || "Your Startup"}</h2>
+            <Badge variant="secondary" className="capitalize text-sm px-3 py-1">{project.stage}</Badge>
+          </div>
+          <p className="text-muted-foreground mt-1">{project.industry}</p>
         </div>
+      </div>
 
+      <div className="container mx-auto px-4 pb-12">
         {/* Quick Stats */}
-        <div className="grid md:grid-cols-4 gap-4 mb-8">
-          <Card className="p-4">
-            <div className="flex items-center justify-between">
+        <div className="grid md:grid-cols-4 gap-6 mb-12">
+          <Card className="p-6 hover:shadow-lg transition-shadow bg-gradient-to-br from-card to-card/80">
+            <div className="flex items-center justify-between mb-3">
               <div>
-                <p className="text-sm text-muted-foreground">Progress</p>
-                <p className="text-2xl font-bold">15%</p>
+                <p className="text-sm text-muted-foreground mb-1">Progress</p>
+                <p className="text-3xl font-bold">15%</p>
               </div>
-              <Clock className="w-8 h-8 text-muted-foreground" />
+              <Clock className="w-10 h-10 text-primary opacity-50" />
             </div>
-            <Progress value={15} className="mt-2" />
+            <Progress value={15} className="mt-3 h-2" />
           </Card>
 
-          <Card className="p-4">
+          <Card className="p-6 hover:shadow-lg transition-shadow bg-gradient-to-br from-card to-card/80">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Tasks Done</p>
-                <p className="text-2xl font-bold">3 / 20</p>
+                <p className="text-sm text-muted-foreground mb-1">Tasks Done</p>
+                <p className="text-3xl font-bold">3 / 20</p>
               </div>
-              <CheckCircle2 className="w-8 h-8 text-green-500" />
-            </div>
-          </Card>
-
-          <Card className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Conversations</p>
-                <p className="text-2xl font-bold">0</p>
-              </div>
-              <MessageSquare className="w-8 h-8 text-muted-foreground" />
+              <CheckCircle2 className="w-10 h-10 text-green-500" />
             </div>
           </Card>
 
-          <Card className="p-4">
+          <Card className="p-6 hover:shadow-lg transition-shadow bg-gradient-to-br from-card to-card/80">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Deliverables</p>
-                <p className="text-2xl font-bold">0</p>
+                <p className="text-sm text-muted-foreground mb-1">Conversations</p>
+                <p className="text-3xl font-bold">0</p>
               </div>
-              <FileText className="w-8 h-8 text-muted-foreground" />
+              <MessageSquare className="w-10 h-10 text-primary opacity-50" />
+            </div>
+          </Card>
+
+          <Card className="p-6 hover:shadow-lg transition-shadow bg-gradient-to-br from-card to-card/80">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground mb-1">Deliverables</p>
+                <p className="text-3xl font-bold">0</p>
+              </div>
+              <FileText className="w-10 h-10 text-primary opacity-50" />
             </div>
           </Card>
         </div>
 
         {/* Mentors Grid */}
         <div>
-          <h2 className="text-2xl font-bold mb-6">Talk to Your Mentors</h2>
+          <div className="mb-8">
+            <h2 className="text-3xl font-bold mb-3">Meet Your Mentor Team</h2>
+            <p className="text-muted-foreground text-lg">Select a mentor to start building your startup with personalized guidance</p>
+          </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {mentors.map((mentor) => {
+            {Object.entries(mentorConfig).map(([id, mentor]) => {
               const Icon = mentor.icon;
               return (
                 <Card 
-                  key={mentor.id}
-                  className="p-6 hover:shadow-lg transition-all cursor-pointer group border-2 hover:border-primary"
-                  onClick={() => handleMentorClick(mentor.id)}
+                  key={id}
+                  className="group relative overflow-hidden hover:shadow-xl hover:shadow-primary/20 transition-all duration-300 cursor-pointer hover:-translate-y-2 border-2 hover:border-primary/60 bg-gradient-to-br from-card to-card/80"
+                  onClick={() => handleMentorClick(id)}
                 >
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${mentor.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                    <Icon className="w-6 h-6 text-white" />
+                  <div className="p-6 relative z-10">
+                    <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${mentor.color} flex items-center justify-center mb-5 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-2xl`}>
+                      <Icon className="w-10 h-10 text-white" />
+                    </div>
+                    <h3 className="font-bold text-xl mb-3 group-hover:text-primary transition-colors">
+                      {mentor.name}
+                    </h3>
+                    <p className="text-sm text-muted-foreground mb-4 leading-relaxed">{mentor.description}</p>
+                    <Button variant="ghost" size="sm" className="w-full group-hover:bg-primary/10">
+                      <MessageSquare className="w-4 h-4 mr-2" />
+                      Start Chat
+                    </Button>
                   </div>
-                  <h3 className="font-semibold text-lg mb-2">{mentor.name}</h3>
-                  <p className="text-sm text-muted-foreground mb-4">{mentor.description}</p>
-                  <Button variant="ghost" size="sm" className="w-full">
-                    <MessageSquare className="w-4 h-4 mr-2" />
-                    Start Chat
-                  </Button>
+                  <div className={`absolute inset-0 bg-gradient-to-br ${mentor.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
                 </Card>
               );
             })}
